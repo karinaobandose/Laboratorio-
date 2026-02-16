@@ -1,0 +1,573 @@
+=================================================================================
+University.: Universidad Técnica Nacional
+Campus.....: Pacífico (JRMP)
+Career.....: Ingeniería en Tecnologías de Información
+Period.....: 1C-2026
+Course.....: ITI-721 - Desarrollo de Aplicaciones para Dispositivos Móviles II
+Document...: Class_06.txt
+Goals......: - Create application using React-Native libraries.
+			 - Config Android environment.
+			 - Using the Shared Preferences.			 
+Professor..: Jorge Ruiz (york)
+Student....:
+=================================================================================
+
+Step 01 - Open the Android Emulator
+
+	Only the AVD is required
+	
+	or physical cellphone in developer options activated
+	
+	
+Step 02 - Close the Antivirus (real time scanning) (only if is required).
+
+
+Step 03 - Update global environment
+
+	- Open PowerShell as administrator and execute
+
+		npm install -g typescript 
+		
+		
+	- Close the current PowerShell instance	
+
+	
+Setp 04 - Creates the new application:
+
+	- Open the PowerShell (administrator is not required)
+		
+	- Changes location to work directory and executes the next instruction:
+			
+		npx @react-native-community/cli@latest init class_06 --version 0.83.0
+		
+		
+	- Open the new project folder with your favorite IDE (visual code)	
+		
+	- Open terminal 
+
+		cd android
+		
+		./gradlew generateCodegenArtifactsFromSchema
+		
+			- you can see a message as the following:
+			
+				Starting a Gradle Daemon, 1 incompatible and 1 stopped Daemons could not be reused, use --status for details
+
+				BUILD SUCCESSFUL in 48s
+				10 actionable tasks: 10 executed
+
+			
+	- Testing application (this process take awhile):
+
+		cd ..
+	
+		npx react-native run-android
+		
+		
+	- YUPI time (01)
+	
+	
+Step 05 - Create the source structure:
+
+	- Open this project with your favorite IDE 
+
+	- Create in <root_project> the next directory structure:
+	
+		<root_project>
+			- localStorage
+			- src
+				- components				
+				- styles
+				- views
+	
+
+Step 06 - Create the StyleSheet:
+
+	- Right click on <root_project>/src/styles
+	
+		- Add new typescript file style_01.tsx and writes:
+		
+			import { StyleSheet } from 'react-native';
+
+			const style_01 = StyleSheet.create({
+				container: {
+					justifyContent: 'center',
+					alignItems: 'center',
+					padding: 20,
+					backgroundColor: '#f7f7f7',
+				},
+				title: {
+					fontSize: 24,
+					fontWeight: 'bold',
+					marginBottom: 10,
+				},
+				inputContainer: {
+					marginBottom: 20,
+				},
+				inputLabel: {
+					fontSize: 18,
+					color: '#666',
+					marginBottom: 5,
+				},
+				inputFiled: {
+					padding: 10,
+					border: '1px solid #ccc',
+					borderRadius: 4,
+					width: '100%',
+				},
+				buttonContainer: {
+					marginTop: 20,
+				},
+				button: {
+					backgroundColor: '#4CAF50',
+					color: '#fff',
+					padding: 10,
+					borderWidth: 0,
+					borderRadius: 4,
+					borderColor: '#4CAF50',
+					justifyContent: 'center',
+				},
+				buttonHover: {
+					backgroundColor: '#3e8e41',
+				},
+			});
+
+			export default style_01;		
+		
+		- Save changes
+
+
+Step 07 - Create the components of the views:
+
+	- Right click on <root_project>/src/views
+	
+		- Add new typescript file Login.tsx and writes:
+			
+			import React, { useState } from 'react';
+			import { View, Text, TextInput, Button } from 'react-native';
+			import style_01 from '../styles/style_01';
+
+			interface LoginProps {
+				onLogin: (username: string, password: string) => void;
+			}
+
+			const Login = ({ onLogin }: LoginProps) => {
+				const [username, setUsername] = useState('');
+				const [password, setPassword] = useState('');
+
+				const handleLogin = () => {
+					if (username === 'admin' && password === 'parda99*') {
+						onLogin(username, password);
+					} else {
+						console.log('Invalid username or password');
+					}
+				};
+
+				return (
+					<View style={style_01.container}>
+						<Text style={style_01.title}>Login Screen</Text>
+						<View style={style_01.inputContainer}>
+							<TextInput
+								style={style_01.inputFiled}
+								placeholder="Username"
+								value={username}
+								onChangeText={(text) => setUsername(text)}
+							/>
+						</View>
+						<View style={style_01.inputContainer}>
+							<TextInput
+								style={style_01.inputFiled}
+								placeholder="Password"
+								secureTextEntry={true}
+								value={password}
+								onChangeText={(text) => setPassword(text)}
+							/>
+						</View>
+						<View style={style_01.buttonContainer}>
+							<Button title="Login" onPress={handleLogin} />
+						</View>
+					</View>
+				);
+			};
+
+			export default Login;
+
+		- Save changes
+		
+		
+		- Add new typescript file Welcome.tsx and writes:
+		
+			import React from 'react';
+			import { View, Text } from 'react-native';
+			import style_01 from '../styles/style_01';
+
+			const Welcome = () => {
+				return (
+					<View style={style_01.container}>
+						<Text style={style_01.title}>Welcome Screen</Text>
+						<Text>{`Hello, ${'admin'}!`}</Text>
+					</View>
+				);
+			};
+
+			export default Welcome;		
+		
+		- Save changes
+		
+
+	- Open the <root_project>/App.tsx and:
+	
+		- Delete all code and writes the next instructions:
+
+			// Call react libraries
+			import React, { useState } from 'react';
+			import { View } from 'react-native';
+
+			// Call the Login and Welcome components (custom components)
+			import Login from './src/views/Login';
+			import Welcome from './src/views/Welcome';
+
+			const App = () => {
+			  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+			  if(isLoggedIn) {
+				return <Welcome />;
+			  }else {
+				return (
+				  <View>
+					<Login onLogin={(username, password) => {
+					  if(username === 'admin' && password === 'parda99*'){
+						setIsLoggedIn(true);
+					  }}} />
+				  </View>
+				);
+			  }
+			};
+
+			export default App;
+		
+		- Save changes
+
+
+	- Testing application (in terminal):		
+	
+		npx react-native run-android
+		
+		
+	- YUPI time again (02)
+
+		
+Setp 08 - Add localStorage module (header):	
+	
+	- Create typeScrip file called NativeLocalStorage.tsx into the <root_project>/localStorage/
+	
+	- Writes the next code:
+	
+		import type { TurboModule } from 'react-native';
+		import { TurboModuleRegistry } from 'react-native';
+
+		export interface Spec extends TurboModule {
+		  getItem(key: string): string | null;
+		  setItem(key: string, value: string): void;
+		  removeItem(key: string): void;
+		  clear(): void;
+		}
+
+		export default TurboModuleRegistry.getEnforcing<Spec>(
+		  'NativeLocalStorage'
+		);
+		
+	- Save changes	
+		
+	- Open <root_project>/package.json, and add the next code before dependencies segment:
+	
+			"start": "react-native start",
+			"test": "jest"
+		  },
+		  "codegenConfig": {
+			"name": "NativeLocalStorageSpec",
+			"type": "modules",
+			"jsSrcsDir": "localStorage",
+			"android": {
+			  "javaPackageName": "com.class_06"
+			}
+		  },
+		  "dependencies": {
+			"react": "19.2.0",
+	
+	
+		- Save changes	
+	
+	
+	- Go back to the terminal and execute again:
+	
+		cd android
+		
+		./gradlew generateCodegenArtifactsFromSchema
+
+			- you can see:
+		
+				BUILD SUCCESSFUL in 7s
+				14 actionable tasks: 2 executed, 12 up-to-date
+
+	- YUPI time again (03)
+
+
+Step 09 - Add localStorage module (body - Kotlin code):
+
+	- Create a kotlin file called NativeLocalStorageModule.kt in:
+
+		<root_project>/android/app/src/main/java/com/class_06
+		
+		
+	- Open new file <root_project>/android/app/src/main/java/com/class_06/NativeLocalStorageModule.kt and writes:
+
+		package com.class_06
+
+		import android.content.Context
+		import android.content.SharedPreferences
+		import com.class_06.NativeLocalStorageSpec
+		import com.facebook.react.bridge.ReactApplicationContext
+
+		class NativeLocalStorageModule(reactContext: ReactApplicationContext) : NativeLocalStorageSpec(reactContext) {
+
+		  override fun getName() = NAME
+
+		  override fun setItem(value: String, key: String) {
+			val sharedPref = getReactApplicationContext().getSharedPreferences("localSP", Context.MODE_PRIVATE)
+			val editor = sharedPref.edit()
+			editor.putString(key, value)
+			editor.apply()
+		  }
+
+		  override fun getItem(key: String): String? {
+			val sharedPref = getReactApplicationContext().getSharedPreferences("localSP", Context.MODE_PRIVATE)
+			val username = sharedPref.getString(key, null)
+			return username.toString()
+		  }
+
+		  override fun removeItem(key: String) {
+			val sharedPref = getReactApplicationContext().getSharedPreferences("localSP", Context.MODE_PRIVATE)
+			val editor = sharedPref.edit()
+			editor.remove(key)
+			editor.apply()
+		  }
+
+		  override fun clear() {
+			val sharedPref = getReactApplicationContext().getSharedPreferences("localSP", Context.MODE_PRIVATE)
+			val editor = sharedPref.edit()
+			editor.clear()
+			editor.apply()
+		  }
+
+		  companion object {
+			const val NAME = "NativeLocalStorage"
+		  }
+		}
+
+	- Save changes
+		
+	- Create a kotlin file called NativeLocalStoragePackage.kt in:
+
+		<root_project>/android/app/src/main/java/com/class_06
+		
+		
+	- Open new file <root_project>/android/app/src/main/java/com/class_06/NativeLocalStoragePackage.kt and writes:	
+	
+		package com.class_06
+
+		import com.facebook.react.BaseReactPackage
+		import com.facebook.react.bridge.NativeModule
+		import com.facebook.react.bridge.ReactApplicationContext
+		import com.facebook.react.module.model.ReactModuleInfo
+		import com.facebook.react.module.model.ReactModuleInfoProvider
+
+		class NativeLocalStoragePackage : BaseReactPackage() {
+
+		  override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? =
+			if (name == NativeLocalStorageModule.NAME) {
+			  NativeLocalStorageModule(reactContext)
+			} else {
+			  null
+			}
+
+		  override fun getReactModuleInfoProvider() = ReactModuleInfoProvider {
+			mapOf(
+			  NativeLocalStorageModule.NAME to ReactModuleInfo(
+				name = NativeLocalStorageModule.NAME,
+				className = NativeLocalStorageModule.NAME,
+				canOverrideExistingModule = false,
+				needsEagerInit = false,
+				isCxxModule = false,
+				isTurboModule = true
+			  )
+			)
+		  }
+		}
+	
+	- Save changes
+	
+	- Open file <root_project>/android/app/src/main/java/com/class_06/MainApplication.kt:
+	
+		- Add import:
+		
+			import com.class_06.NativeLocalStoragePackage
+			
+			
+		- Add the instruction add(NativeLocalStoragePackage()) 
+
+			override fun getPackages(): List<ReactPackage> =
+				PackageList(this).packages.apply {
+				  // Packages that cannot be autolinked yet can be added manually here, for example:
+				  // add(MyReactNativePackage())
+				  
+				  // Add this line
+				  add(NativeLocalStoragePackage())
+				  
+				}
+		
+		- Save changes
+		
+		
+	- Go back to the terminal and execute again:
+	
+		cd android
+		
+		./gradlew clean  
+		
+		./gradlew assembleRelease
+		
+			- you can see:
+			
+				BUILD SUCCESSFUL in 2m 57s
+				74 actionable tasks: 64 executed, 10 up-to-date
+			
+	- YUPI time again (04)
+	
+	
+Step 10 - Update the graphic interface
+
+	- Open <root_project>/src/views/Login.tsx file
+	
+	- Delete all code and writes:
+	
+		import React, { useState } from 'react';
+		import { View, Text, TextInput, Button } from 'react-native';
+
+		import style_01 from '../styles/style_01';
+		import NativeLocalStorage from '../../localStorage/NativeLocalStorage';
+
+		interface LoginProps {
+			onLogin: (username: string, password: string) => void;
+		}
+
+		const Login = ({ onLogin }: LoginProps) => {
+			const [localusername, setUsername] = useState('');
+			const [localpassword, setPassword] = useState('');
+
+			const handleLogin = () => {
+				if ((localusername === 'admin') && (localpassword === 'parda99*')) {
+					NativeLocalStorage?.setItem(localusername ?? '', 'username');
+					NativeLocalStorage?.setItem(localpassword ?? '', 'password');
+					onLogin(localusername, localpassword);
+				} else {
+					console.log('Invalid username or password');
+				}
+			};
+
+			return (
+				<View style={style_01.container}>
+					<Text style={style_01.title}>Login Screen</Text>
+					<View style={style_01.inputContainer}>
+						<TextInput
+							style={style_01.inputFiled}
+							placeholder="Username"
+							value={localusername}
+							onChangeText={(text) => setUsername(text)}
+						/>
+					</View>
+					<View style={style_01.inputContainer}>
+						<TextInput
+							style={style_01.inputFiled}
+							placeholder="Password"
+							secureTextEntry={true}
+							value={localpassword}
+							onChangeText={(text) => setPassword(text)}
+						/>
+					</View>
+					<View style={style_01.buttonContainer}>
+						<Button title="Login" onPress={handleLogin} />
+					</View>
+				</View>
+			);
+		};
+
+		export default Login;
+
+
+	- Save changes
+	
+	- Open <root_project>/App.tsx file
+	
+	- Delete all code and writes:
+	
+		// Call react libraries
+		import React, { useState } from 'react';
+		import { View } from 'react-native';
+
+		// Call the Login and Welcome components (custom components)
+		import Login from './src/views/Login';
+		import Welcome from './src/views/Welcome';
+
+		import NativeLocalStorage from './localStorage/NativeLocalStorage';
+
+		const App = () => {
+		  const [localusername, setUsername] = useState('');
+		  const [localpassword, setPassword] = useState('');
+
+		  React.useEffect(() => {
+			const user = NativeLocalStorage?.getItem('username');
+			const pass = NativeLocalStorage?.getItem('password');
+			setUsername(user ?? '');
+			setPassword(pass ?? '');
+		  }, []);
+
+		  if((localusername.length > 0) && (localpassword.length > 0)){
+			return <Welcome />;
+		  }else {
+			return (
+				<View>
+				  <Login onLogin={(username, password) => {
+					console.log(username + ' - ' + password);
+					setUsername(username);
+					setPassword(password);
+				  } } />
+				</View>
+			);
+		  }
+		};
+
+		export default App;
+	
+	- Save changes
+	
+	- Go back to the terminal and execute again:
+	
+		cd android
+		
+		./gradlew clean  
+		
+		./gradlew assembleRelease
+		
+			- you can see:
+			
+				BUILD SUCCESSFUL in 2m 57s
+				74 actionable tasks: 64 executed, 10 up-to-date
+				
+		cd ..
+
+		npx react-native run-android
+
+			
+	- YUPI time again (05)
+
