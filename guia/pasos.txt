@@ -1,0 +1,51 @@
+Listado de lugares: Mostrar una lista de lugares turísticos con sus respectivos detalles
+(nombre, descripción, dirección).
+
+2. Detalles del lugar: Al seleccionar un lugar de la lista, mostrar los detalles del lugar, como
+la descripción, horarios de apertura, sitio web (en lo posible debe mostrarlo dentro de la
+aplicación o por lo menos abrirlo el web browser por defecto en el dispositivo), datos
+de enlace como teléfonos o correos electrónicos y otros 2 que usted considere importantes
+
+Estrutura
+
+Laboratorio/
+├── App.js                          # Punto de entrada principal
+├── package.json
+├── babel.config.js
+├── metro.config.js
+│
+├── src/
+│   ├── components/                 # Componentes reutilizables
+│   │   ├── PlacesList.js          # ✅ Componente de lista (PASO 1)
+│   │   └── SearchBar.js           # Para el paso 3
+│   │
+│   ├── screens/                    # Pantallas de la app
+│   │   ├── HomeScreen.js          # ✅ Pantalla principal (PASO 1)
+│   │   ├── PlaceDetailsScreen.js  # Para el paso 2
+│   │   └── FavoritesScreen.js     # Para el paso 5
+│   │
+│   ├── redux/                      # Estado global con Redux
+│   │   ├── store.js
+│   │   ├── slices/
+│   │   │   ├── placesSlice.js
+│   │   │   └── favoritesSlice.js
+│   │   └── actions/
+│   │
+│   ├── services/                   # Servicios y APIs
+│   │   ├── api.js                 # Configuración de Axios
+│   │   └── placesService.js       # Métodos para el API
+│   │
+│   ├── storage/                    # Almacenamiento local
+│   │   └── localStorage.js        # AsyncStorage o SQLite
+│   │
+│   ├── constants/                  # Constantes
+│   │   └── locations.js           # Lista de ciudades
+│   │
+│   └── utils/                      # Utilidades
+│       └── helpers.js
+│
+├── android/                        # Configuración Android
+├── ios/                           # Configuración iOS
+└── assets/                        # Imágenes y recursos
+    ├── images/
+    └── icons/
